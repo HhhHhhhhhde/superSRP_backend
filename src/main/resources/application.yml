@@ -13,6 +13,17 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/super_rps?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:123456789}
+    # HikariCP连接池配置
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  # 事务配置
+  transaction:
+    rollback-on-commit-failure: true
     
   # Jackson配置
   jackson:
@@ -27,6 +38,12 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 默认执行器类型：SIMPLE 适用于事务管理
+    default-executor-type: SIMPLE
+    # 自动映射行为
+    auto-mapping-behavior: PARTIAL
+    # 开启延迟加载
+    lazy-loading-enabled: false
 
 # JWT配置（支持环境变量）
 jwt:
