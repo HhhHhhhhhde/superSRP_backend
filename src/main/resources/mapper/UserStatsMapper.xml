@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.superrps.dao.UserStatsMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.superrps.entity.UserStats">
+        <id column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="games_played" property="gamesPlayed" jdbcType="INTEGER"/>
+        <result column="games_won" property="gamesWon" jdbcType="INTEGER"/>
+        <result column="current_level" property="currentLevel" jdbcType="INTEGER"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        user_id, games_played, games_won, current_level, updated_at
+    </sql>
+
+    <!-- 根据用户ID查询 -->
+    <select id="findByUserId" parameterType="long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_stats
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 插入统计数据 -->
+    <insert id="insert" parameterType="com.example.superrps.entity.UserStats">
+        INSERT INTO user_stats (user_id, games_played, games_won, current_level, updated_at)
+        VALUES (#{userId}, #{gamesPlayed}, #{gamesWon}, #{currentLevel}, NOW())
+    </insert>
+
+    <!-- 更新统计数据 -->
+    <update id="update" parameterType="com.example.superrps.entity.UserStats">
+        UPDATE user_stats
+        <set>
+            <if test="gamesPlayed != null">games_played = #{gamesPlayed},</if>
+            <if test="gamesWon != null">games_won = #{gamesWon},</if>
+            <if test="currentLevel != null">current_level = #{currentLevel},</if>
+            updated_at = NOW()
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加游戏场次 -->
+    <update id="incrementGamesPlayed" parameterType="long">
+        UPDATE user_stats
+        SET games_played = games_played + 1,
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加获胜场次 -->
+    <update id="incrementGamesWon" parameterType="long">
+        UPDATE user_stats
+        SET games_won = games_won + 1,
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 更新当前关卡 -->
+    <update id="updateCurrentLevel">
+        UPDATE user_stats
+        SET current_level = #{level},
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>
+

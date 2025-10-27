@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.superrps.dao.GameHistoryMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.superrps.entity.GameHistory">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="game_type" property="gameType" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+        <result column="result" property="result" jdbcType="VARCHAR"/>
+        <result column="moves" property="moves" jdbcType="VARCHAR"/>
+        <result column="played_at" property="playedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, user_id, game_type, level, result, moves, played_at
+    </sql>
+
+    <!-- 插入游戏记录 -->
+    <insert id="insert" parameterType="com.example.superrps.entity.GameHistory" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO game_history (user_id, game_type, level, result, moves, played_at)
+        VALUES (#{userId}, #{gameType}, #{level}, #{result}, #{moves}, #{playedAt})
+    </insert>
+
+    <!-- 根据用户ID查询游戏记录 -->
+    <select id="findByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM game_history
+        WHERE user_id = #{userId}
+        ORDER BY played_at DESC
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 统计用户游戏总数 -->
+    <select id="countByUserId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM game_history
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>
+
