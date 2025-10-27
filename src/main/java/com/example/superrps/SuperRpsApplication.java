@@ -3,12 +3,14 @@ package com.example.superrps;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 超级石头剪刀布游戏后端主应用程序
  */
 @SpringBootApplication
 @MapperScan("com.example.superrps.dao")
+@EnableTransactionManagement
 public class SuperRpsApplication {
     
     public static void main(String[] args) {
